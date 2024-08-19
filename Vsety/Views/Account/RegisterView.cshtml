@@ -1,0 +1,31 @@
+﻿@using Vsety.Core.Models.ViewModels
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="container registration">
+    <div class="auth-box">
+        <form asp-action="Register" asp-controller="Account" method="post">
+            <div class="logo">
+                <h1>Регистрация</h1>
+            </div>
+            <div class="mb-3">
+                <span asp-validation-for="Login" class="text-danger"></span>
+                <input type="text" asp-for="Login" class="form-control" id="username" placeholder="Почта">
+            </div>
+            <div class="mb-3">
+                <span asp-validation-for="Password" class="text-danger"></span>
+                <input type="password" asp-for="Password" class="form-control" id="password" placeholder="Пароль">
+            </div>
+            <div class="mb-3">
+                <span asp-validation-for="PasswordCheck" class="text-danger"></span>
+                <input type="password" asp-for="PasswordCheck" class="form-control" id="confirm-password" placeholder="Повторите пароль">
+            </div>
+            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+            <div class="existing-account">
+                Уже есть аккаунт? <a href="#">Войти</a>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,44 @@
+﻿@using Vsety.Core.Models
+@model Person
+@{
+    ViewData["Title"] = "Person";
+}
+
+<div class="container registration">
+    <div class="auth-box">
+        <form asp-action="Person" asp-controller="Account" method="post">
+            <div class="logo">
+                <h1>Информация о себе</h1>
+            </div>
+            <div class="mb-3">
+                <span asp-validation-for="Name" class="text-danger"></span>
+                <input type="text" asp-for="Name" class="form-control" id="username" placeholder="Имя">
+            </div>
+            <div class="mb-3">
+                <span asp-validation-for="Surname" class="text-danger"></span>
+                <input type="text" asp-for="Surname" class="form-control" id="password" placeholder="Фамилия">
+            </div>
+            <div class="mb-3">
+                <span asp-validation-for="Gender" class="text-danger"></span>
+                <input type="text" asp-for="Gender" class="form-control" id="confirm-password" placeholder="Гендер">
+            </div>
+            <div class="mb-3">
+                <span asp-validation-for="City" class="text-danger"></span>
+                <input type="text" asp-for="City" class="form-control" id="confirm-password" placeholder="Город">
+            </div>
+            <div class="mb-3">
+                <span asp-validation-for="Birthday" class="text-danger"></span>
+                <input type="date" asp-for="Birthday" class="form-control" id="confirm-password" placeholder="День рождения">
+            </div>
+            <div class="mb-3">
+                <span asp-validation-for="Nickname" class="text-danger"></span>
+                <input type="text" asp-for="Nickname" class="form-control" id="confirm-password" placeholder="Ник">
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+            <div class="existing-account">
+                Уже есть аккаунт? <a href="#">Войти</a>
+            </div>
+        </form>
+    </div>
+</div>
