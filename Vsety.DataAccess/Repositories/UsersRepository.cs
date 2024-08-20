@@ -4,7 +4,7 @@ using Vsety.DataAccess.Entities;
 
 namespace Vsety.DataAccess.Repositories
 {
-    public class UsersRepository
+    public class UsersRepository : IUsersRepository
     {
         private readonly ApplicationContext _context;
         public UsersRepository(ApplicationContext context)

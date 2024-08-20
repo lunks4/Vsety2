@@ -1,5 +1,8 @@
 using Microsoft.EntityFrameworkCore;
+using Vsety.Application.Services;
 using Vsety.DataAccess;
+using Vsety.DataAccess.Repositories;
+using Vsety.Infrastructure;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,12 +12,18 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationContext>(options =>
     options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 21))));
 
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
+
 builder.Services.AddDistributedMemoryCache();// добавляем IDistributedMemoryCache
 builder.Services.AddSession();  // добавляем сервисы сессии
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddMvc();
-builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<IJwtProvider, JwtProvider>();
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 
 var app = builder.Build();
 

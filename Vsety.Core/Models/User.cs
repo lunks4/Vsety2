@@ -6,12 +6,11 @@ namespace Vsety.Core.Models
 {
     public class User
     {
-        private User(Guid id, string mail, string password, Person? person)
+        public User(Guid id, string mail, string password)
         {
             Id = id;
             Mail = mail;
             PasswordHash = password;
-            Person = person;
         }
 
         [Key]
@@ -24,10 +23,5 @@ namespace Vsety.Core.Models
         [Display(Name = "Password")]
         public string PasswordHash { get; private set; }
         public Person? Person { get; set; }
-
-        public static User Create(Guid id, string mail, string password, Person? person)
-        {
-            return new User(id, mail, password, person);
-        }
     }
 }

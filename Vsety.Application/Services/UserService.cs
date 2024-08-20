@@ -6,14 +6,14 @@ namespace Vsety.Application.Services
 {
     public class UserService
     {
-        private readonly PasswordHasher passwordHasher;
-        private readonly UsersRepository usersRepository;
-        private readonly JwtProvider jwtProvider;
+        private readonly IPasswordHasher passwordHasher;
+        private readonly IUsersRepository usersRepository;
+        private readonly IJwtProvider jwtProvider;
 
         public UserService(
-            UsersRepository usersRepository,
-            PasswordHasher passwordHasher,
-            JwtProvider jwtProvider)
+            IUsersRepository usersRepository,
+            IPasswordHasher passwordHasher,
+            IJwtProvider jwtProvider)
         {
             this.passwordHasher = passwordHasher;
             this.usersRepository = usersRepository;
@@ -24,7 +24,7 @@ namespace Vsety.Application.Services
         {
             var hashedPassword = passwordHasher.Generate(password);
 
-            var user = User.Create(Guid.NewGuid(), mail, hashedPassword, null);
+            var user = new User(Guid.NewGuid(), mail, hashedPassword);
 
             await usersRepository.Add(user);
         }

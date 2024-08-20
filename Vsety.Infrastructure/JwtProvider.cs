@@ -8,7 +8,7 @@ using Vsety.DataAccess.Entities;
 
 namespace Vsety.Infrastructure
 {
-    public class JwtProvider
+    public class JwtProvider : IJwtProvider
     {
         private readonly JwtOptions _options;
         public JwtProvider(IOptions<JwtOptions> options)

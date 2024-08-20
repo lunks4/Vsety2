@@ -40,6 +40,7 @@
     <ProjectReference Include="..\Vsety.Application\Vsety.Application.csproj" />
     <ProjectReference Include="..\Vsety.Core\Vsety.Core.csproj" />
     <ProjectReference Include="..\Vsety.DataAccess\Vsety.DataAccess.csproj" />
+    <ProjectReference Include="..\Vsety.Infrastructure\Vsety.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
