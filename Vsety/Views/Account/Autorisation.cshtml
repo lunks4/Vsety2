@@ -1,0 +1,25 @@
+﻿@using Vsety.Core.Models.ViewModel;
+@model AutorisationViewModel
+@{
+    ViewData["Title"] = "Authorization";
+}
+
+<div class="container authorization">
+    <div class="auth-box">
+        <form asp-action="Autorisation" asp-controller="Account" method="post">
+            <div class="logo">
+                <h1>Вход</h1>
+            </div>
+            <div class="mb-3">
+                <span asp-validation-for="Login" class="text-danger"></span>
+                <input type="text" asp-for="Login" class="form-control" id="username" placeholder="Почта">
+            </div>
+            <div class="mb-3">
+                <span asp-validation-for="Password" class="text-danger"></span>
+                <input type="password" asp-for="Password" class="form-control" id="password" placeholder="Пароль">
+            </div>
+            <button type="submit" class="btn btn-primary">Войти</button>
+            <a asp-area="" asp-controller="Account" asp-action="RegisterView" style="text-decoration: none; color:blue ;">Зарегистрируйтесь</a>
+        </form>
+    </div>
+</div>

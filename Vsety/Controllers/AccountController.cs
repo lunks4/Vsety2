@@ -3,13 +3,12 @@ using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Vsety.DataAccess;
 using Vsety.Core.Models;
-using Vsety.API.Contracts.Users;
-using Vsety.Core.Models.ViewModels;
-using Vsety.API.Endpoints;
+using Vsety.Core.Models.ViewModel;
 using Org.BouncyCastle.Asn1.Ocsp;
 using Vsety.Application.Services;
 using Vsety.DataAccess.Repositories;
 using Vsety.Infrastructure;
+using System.Xml;
 
 
 namespace Vsety.API.Controllers
@@ -20,17 +19,51 @@ namespace Vsety.API.Controllers
         private readonly IUsersRepository _usersRepository;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IJwtProvider _jwtProvider;
-
+        private readonly IPersonsRepository _personsRepository;
         public AccountController(ApplicationContext context, 
-            IUsersRepository usersRepozitory, 
-            IPasswordHasher passwordHasher, 
-            IJwtProvider jwtProvider)
+            IUsersRepository usersRepozitory,
+            IPasswordHasher passwordHasher,
+            IJwtProvider jwtProvider,
+            IPersonsRepository personsRepository)
         {
             _context = context;
             _usersRepository = usersRepozitory;
             _passwordHasher = passwordHasher;
             _jwtProvider = jwtProvider;
+            _personsRepository = personsRepository;
         }
+        [HttpGet]
+        public IActionResult Autorisation()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Autorisation(AutorisationViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var userService = new UserService(_usersRepository, _passwordHasher, _jwtProvider);
+                if (_usersRepository.UserExist(model.Login).Result)
+                {
+                    var token = await userService.Login(model.Login, model.Password);
+                    if (token == "")
+                    {
+                        ModelState.AddModelError("Password", "Неправильный пароль");
+                        return View(model);
+                    }
+                    HttpContext.Response.Cookies.Append("token", token);
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ModelState.AddModelError("Login", "Пользователь с такой почтой не зарегистрирован");
+                    return View(model);
+                }
+            }
+            return View(model);
+        }
+
         [HttpGet]
         public IActionResult RegisterView()
         {
@@ -42,17 +75,24 @@ namespace Vsety.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                //_context.Add(model);
-                //await _context.SaveChangesAsync();
-                foreach (var person1 in _context.Users)
+                if (!_usersRepository.UserExist(model.Login).Result)
                 {
-                    _context.Remove(person1);
+                    foreach (var person1 in _context.Users)
+                    {
+                        _context.Remove(person1);
+                    }
+                    var userService = new UserService(_usersRepository, _passwordHasher, _jwtProvider);
+                    await userService.Register(model.Login, model.Password);
+                    HttpContext.Response.Cookies.Append("login", model.Login);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction("PersonView", "Account");
                 }
-                var userService = new UserService(_usersRepository, _passwordHasher, _jwtProvider);
-                await userService.Register(model.Login, model.Password);
-                HttpContext.Response.Cookies.Append("login", model.Login);
-                await _context.SaveChangesAsync();
-                return RedirectToAction("PersonView", "Account");
+                else
+                {
+                    ModelState.AddModelError("Login", "Пользователь с этой почтой уже зарегистрирован");
+                    return View(model);
+                }
             }
             return View(model);
         }
@@ -66,22 +106,28 @@ namespace Vsety.API.Controllers
         [HttpPost]
         public async Task<IActionResult> PersonView(Person model)
         {
+            if (model.avatar != null)
+            {
+                string path = "/img/" + model.avatar.FileName;
+                model.avatarPath = path;
+            } 
+            
             if (ModelState.IsValid)
             {
-                //_context.Add(model);
-                //await _context.SaveChangesAsync();
                 foreach(var person in _context.Persons)
                 {
                     _context.Remove(person);
                 }
-
-                var user = _context.Users.FirstOrDefault(u => u.Mail == HttpContext.Request.Cookies["login"]);
-                //user.Person = model; 
-                _context.Add(model);
+                foreach (var person in _context.Imgs)
+                {
+                    _context.Remove(person);
+                }
+                await _personsRepository.AddPerson(HttpContext.Request.Cookies["login"], model);
+                
 
                 await _context.SaveChangesAsync();
                 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Autorisation", "Account");
             }
             return View(model);
         }

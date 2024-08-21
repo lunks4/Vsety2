@@ -7,5 +7,7 @@ namespace Vsety.DataAccess.Repositories
     {
         Task Add(User user);
         Task<UserEntity?> GetByMail(string mail);
+        Task<bool> UserExist(string login);
+        Task<UserEntity?> GetById(Guid id);
     }
 }

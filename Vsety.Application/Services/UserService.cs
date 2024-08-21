@@ -37,7 +37,7 @@ namespace Vsety.Application.Services
 
             if (result == false)
             {
-                throw new Exception("Ошибка");
+                return "";
             }
 
             var token = jwtProvider.GenerateToken(user);

@@ -28,6 +28,7 @@ namespace Vsety.Infrastructure
                 expires: DateTime.UtcNow.AddHours(_options.ExpiresHours));
 
             var tokenValue = new JwtSecurityTokenHandler().WriteToken(token);
+            var token1 =  new JwtSecurityTokenHandler().ReadToken(tokenValue);
 
             return tokenValue;
         }

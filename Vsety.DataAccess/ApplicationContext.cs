@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.IO;
 using Vsety.DataAccess.Entities;
 
 namespace Vsety.DataAccess
@@ -8,6 +9,8 @@ namespace Vsety.DataAccess
         public DbSet<UserEntity> Users { get; set; }
 
         public DbSet<PersonEntity> Persons { get; set; }
+
+        public DbSet<ImgEntity> Imgs { get; set; }
         public ApplicationContext(DbContextOptions<ApplicationContext> options)
             : base(options)
         {

@@ -5,7 +5,6 @@ namespace Vsety.DataAccess.Entities
 {
     public class PersonEntity
     {
-        [Key, ForeignKey("User")]
         [Required]
         public Guid Id { get; set; }
         [Required]
@@ -18,10 +17,10 @@ namespace Vsety.DataAccess.Entities
         [DataType(DataType.Date)]
         public DateTime Birthday { get; set;}
         [DataType(DataType.Text)]
-        public string Nickname { get; set; } 
-
-        public Guid UserId { get; set; }
-
-        public UserEntity? user { get; set; }
+        public string Nickname { get; set; }
+        //public Guid? UserId { get; set; }
+        [ForeignKey("ImgEntity")]
+        public Guid ImgId { get; set; } = Guid.Empty;
+        public ImgEntity? img { get; set; }
     }
 }

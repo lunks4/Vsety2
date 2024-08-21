@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Vsety.Core.Models.ViewModels
+namespace Vsety.Core.Models.ViewModel
 {
     public class RegisterViewModel
     {

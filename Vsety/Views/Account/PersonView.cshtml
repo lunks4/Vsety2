@@ -1,4 +1,4 @@
-﻿@using Vsety.Core.Models
+﻿@using Vsety.Core.Models.ViewModel
 @model Person
 @{
     ViewData["Title"] = "Person";
@@ -6,10 +6,26 @@
 
 <div class="container registration">
     <div class="auth-box">
-        <form asp-action="Person" asp-controller="Account" method="post">
+        <form asp-action="PersonView" asp-controller="Account" method="post" enctype="multipart/form-data">
             <div class="logo">
                 <h1>Информация о себе</h1>
             </div>
+            <div class="mb-3 text-center">
+                <label for="avatar-upload" class="avatar-label">
+                    @if (Model != null)
+                    {   
+                        @if (Model.avatar != null)
+                        {
+                            <img src="@Model.avatarPath" alt="Avatar" class="rounded-circle avatar-image" id="avatar-preview">
+                        }
+                    }
+                    else {
+                        <img src="/img/stockphoto.jpg" alt="Avatar" class="rounded-circle avatar-image" id="avatar-preview">
+                    }
+                </label>
+                <input type="file" id="avatar-upload" name="avatar" accept="image/*" class="form-control-file">
+            </div>
+
             <div class="mb-3">
                 <span asp-validation-for="Name" class="text-danger"></span>
                 <input type="text" asp-for="Name" class="form-control" id="username" placeholder="Имя">
@@ -18,9 +34,14 @@
                 <span asp-validation-for="Surname" class="text-danger"></span>
                 <input type="text" asp-for="Surname" class="form-control" id="password" placeholder="Фамилия">
             </div>
-            <div class="mb-3">
+            <div class="mb-3 dropdown">
                 <span asp-validation-for="Gender" class="text-danger"></span>
-                <input type="text" asp-for="Gender" class="form-control" id="confirm-password" placeholder="Гендер">
+                <input type="text" asp-for="Gender" class="form-control dropdown-toggle" id="gender-input" placeholder="Гендер" readonly data-bs-toggle="dropdown" aria-expanded="false">
+                <ul class="dropdown-menu" aria-labelledby="gender-input">
+                    <li><a class="dropdown-item" href="#" onclick="selectGender('Мужской')">Мужской</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="selectGender('Женский')">Женский</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="selectGender('Без пола')">Без пола</a></li>
+                </ul>
             </div>
             <div class="mb-3">
                 <span asp-validation-for="City" class="text-danger"></span>
@@ -34,7 +55,7 @@
                 <span asp-validation-for="Nickname" class="text-danger"></span>
                 <input type="text" asp-for="Nickname" class="form-control" id="confirm-password" placeholder="Ник">
             </div>
-            
+
             <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
             <div class="existing-account">
                 Уже есть аккаунт? <a href="#">Войти</a>
@@ -42,3 +63,9 @@
         </form>
     </div>
 </div>
+
+<script>
+    function selectGender(value) {
+        document.getElementById('gender-input').value = value;
+    }
+</script>

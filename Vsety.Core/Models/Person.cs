@@ -1,13 +1,12 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Http;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vsety.Core.Models
 {
     public class Person
     {
-        [Key, ForeignKey("User")]
-        [Required]
-        public Guid Id { get; set; }
+        public Guid? Id { get; set; }
         [Required]
         [DataType(DataType.Text)]
         public string Name { get; set; } 
@@ -20,8 +19,8 @@ namespace Vsety.Core.Models
         [DataType(DataType.Text)]
         public string Nickname { get; set; } 
 
-        public Guid UserId { get; set; }
-
-        public User? user { get; set; }
+        public string avatarPath { get; set; } = String.Empty;
+        [Required]
+        public IFormFile avatar { get; set; }
     }
 }

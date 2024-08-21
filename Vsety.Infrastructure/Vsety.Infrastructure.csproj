@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Vsety.Core\Vsety.Core.csproj" />
     <ProjectReference Include="..\Vsety.DataAccess\Vsety.DataAccess.csproj" />
   </ItemGroup>
 

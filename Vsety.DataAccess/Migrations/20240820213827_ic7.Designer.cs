@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Vsety.DataAccess;
 
@@ -11,9 +12,11 @@ using Vsety.DataAccess;
 namespace Vsety.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20240820213827_ic7")]
+    partial class ic7
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,25 +24,6 @@ namespace Vsety.DataAccess.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
-
-            modelBuilder.Entity("Vsety.DataAccess.Entities.ImgEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Path")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Imgs");
-                });
 
             modelBuilder.Entity("Vsety.DataAccess.Entities.PersonEntity", b =>
                 {
@@ -58,9 +42,6 @@ namespace Vsety.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<Guid>("ImgId")
-                        .HasColumnType("char(36)");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -73,9 +54,12 @@ namespace Vsety.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ImgId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Persons");
                 });
@@ -106,13 +90,13 @@ namespace Vsety.DataAccess.Migrations
 
             modelBuilder.Entity("Vsety.DataAccess.Entities.PersonEntity", b =>
                 {
-                    b.HasOne("Vsety.DataAccess.Entities.ImgEntity", "img")
+                    b.HasOne("Vsety.DataAccess.Entities.UserEntity", "User")
                         .WithMany()
-                        .HasForeignKey("ImgId")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("img");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Vsety.DataAccess.Entities.UserEntity", b =>

@@ -26,18 +26,34 @@ namespace Vsety.DataAccess.Repositories
         //        .Include(c => c.Person)
         //        .ToListAsync();
         //}
-        //public async Task<UserEntity?> GetById(Guid id)
-        //{
-        //    return await _context.Users
-        //        .AsNoTracking()
-        //        .FirstOrDefaultAsync(c => c.Id == id);
-        //}
+        public async Task<UserEntity?> GetById(Guid id)
+        {
+            return await _context.Users
+                .AsNoTracking()
+                .FirstOrDefaultAsync(c => c.Id == id);
+        }
 
         public async Task<UserEntity?> GetByMail(string mail)
         {
             return await _context.Users
                 .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.Mail == mail) ?? throw new Exception();
+        }
+
+        public async Task<bool> UserExist(string login)
+        {
+            try
+            {
+                return await _context.Users.AnyAsync(u => u.Mail == login);
+            }
+            catch (Exception ex)
+            {
+                // Логирование исключения и повторное выбрасывание
+                // Логируйте исключение, чтобы получить больше информации о проблеме
+                // Например, можно использовать ILogger для логирования
+                Console.WriteLine($"Exception occurred: {ex.Message}");
+                throw; // Или вернуть false, в зависимости от требований
+            }
         }
 
         //public async Task Update(Guid id, string password)

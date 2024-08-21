@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Vsety.DataAccess.Entities
 {
@@ -13,6 +14,9 @@ namespace Vsety.DataAccess.Entities
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string PasswordHash { get; set; }
+
+        [ForeignKey("PersonEntity")]
+        public Guid? PersonId { get; set; }
         public PersonEntity? Person { get; set; }
     }
 }
