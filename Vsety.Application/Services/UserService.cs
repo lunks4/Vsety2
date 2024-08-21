@@ -24,7 +24,7 @@ namespace Vsety.Application.Services
         {
             var hashedPassword = passwordHasher.Generate(password);
 
-            var user = new User(Guid.NewGuid(), mail, hashedPassword);
+            var user = new User(Guid.NewGuid(), mail, hashedPassword, null);
 
             await usersRepository.Add(user);
         }

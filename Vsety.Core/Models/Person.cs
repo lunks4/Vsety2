@@ -19,8 +19,8 @@ namespace Vsety.Core.Models
         [DataType(DataType.Text)]
         public string Nickname { get; set; } 
 
-        public string avatarPath { get; set; } = String.Empty;
+        public Img? avatarPath { get; set; }
         [Required]
-        public IFormFile avatar { get; set; }
+        public IFormFile? avatar { get; set; }
     }
 }

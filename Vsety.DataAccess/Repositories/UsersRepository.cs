@@ -83,5 +83,12 @@ namespace Vsety.DataAccess.Repositories
             await _context.Users.AddAsync(userEntity);
             await _context.SaveChangesAsync();
         }
+        //public User EntityToUser(UserEntity user)
+        //{
+        //    var user1 = new User()
+
+        //    return user1;
+        //}
+
     }
 }

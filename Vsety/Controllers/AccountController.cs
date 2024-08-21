@@ -61,7 +61,10 @@ namespace Vsety.API.Controllers
                     return View(model);
                 }
             }
-            return View(model);
+            else
+            {
+                return View(model);
+            }
         }
 
         [HttpGet]
@@ -108,8 +111,8 @@ namespace Vsety.API.Controllers
         {
             if (model.avatar != null)
             {
-                string path = "/img/" + model.avatar.FileName;
-                model.avatarPath = path;
+                model.avatarPath.Path = "/img/" +  model.avatar.FileName;
+                model.avatarPath.Name = model.avatar.FileName;
             } 
             
             if (ModelState.IsValid)

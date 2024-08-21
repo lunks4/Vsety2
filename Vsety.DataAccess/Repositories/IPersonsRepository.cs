@@ -7,5 +7,7 @@ namespace Vsety.DataAccess.Repositories
     {
         Task AddPerson(string userLogin, Person person);
         Task<Guid> Update(Guid id, string name, string surname, string gender, string city, DateTime birthday, string nick);
+        Task<PersonEntity?> GetById(Guid id);
+        Task<ImgEntity?> GetFileByIdLogo(Guid id);
     }
 }
