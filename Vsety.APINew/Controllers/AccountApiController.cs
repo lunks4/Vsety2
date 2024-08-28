@@ -1,45 +1,40 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using Microsoft.EntityFrameworkCore;
-using Vsety.DataAccess;
-using Vsety.Core.Models;
-using Vsety.Core.Models.ViewModel;
-using Org.BouncyCastle.Asn1.Ocsp;
 using Vsety.Application.Services;
+using Vsety.Core.Models.ViewModel;
+using Vsety.Core.Models;
 using Vsety.DataAccess.Repositories;
+using Vsety.DataAccess;
 using Vsety.Infrastructure;
-using System.Xml;
 
-
-namespace Vsety.API.Controllers
+namespace Vsety.APINew.Controllers
 {
-    public class AccountController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class AccountApiController : Controller
     {
         private readonly ApplicationContext _context;
         private readonly IUsersRepository _usersRepository;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IJwtProvider _jwtProvider;
         private readonly IPersonsRepository _personsRepository;
-        public AccountController(ApplicationContext context, 
+        private readonly IWebHostEnvironment _environment;
+        public AccountApiController(ApplicationContext context,
             IUsersRepository usersRepozitory,
             IPasswordHasher passwordHasher,
             IJwtProvider jwtProvider,
-            IPersonsRepository personsRepository)
+            IPersonsRepository personsRepository,
+            IWebHostEnvironment environment)
         {
             _context = context;
             _usersRepository = usersRepozitory;
             _passwordHasher = passwordHasher;
             _jwtProvider = jwtProvider;
             _personsRepository = personsRepository;
-        }
-        [HttpGet]
-        public IActionResult Autorisation()
-        {
-            return View();
+            _environment = environment;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Autorisation(AutorisationViewModel model)
+        [HttpPost("authorize")]
+        public async Task<IActionResult> Autorisation([FromBody] AutorisationViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -49,32 +44,24 @@ namespace Vsety.API.Controllers
                     var token = await userService.Login(model.Login, model.Password);
                     if (token == "")
                     {
-                        ModelState.AddModelError("Password", "Неправильный пароль");
-                        return View(model);
+                        return BadRequest(new { message = "Неправильный пароль" });
                     }
                     HttpContext.Response.Cookies.Append("token", token);
-                    return RedirectToAction("Index", "Home");
+                    return Ok(new { token });
                 }
                 else
                 {
-                    ModelState.AddModelError("Login", "Пользователь с такой почтой не зарегистрирован");
-                    return View(model);
+                    return NotFound(new { message = "User with this email is not registered" });
                 }
             }
             else
             {
-                return View(model);
+                return BadRequest(ModelState);
             }
         }
 
-        [HttpGet]
-        public IActionResult RegisterView()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> RegisterView(RegisterViewModel model)
+        [HttpPost("register")]
+        public async Task<IActionResult> RegisterView([FromBody] RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -89,30 +76,22 @@ namespace Vsety.API.Controllers
                     HttpContext.Response.Cookies.Append("login", model.Login);
                     await _context.SaveChangesAsync();
 
-                    return RedirectToAction("PersonView", "Account");
+                    return Ok(new { message = "User registered successfully" });
                 }
                 else
                 {
-                    ModelState.AddModelError("Login", "Пользователь с этой почтой уже зарегистрирован");
-                    return View(model);
+                    return Conflict(new { message = "User with this email already registered" });
                 }
             }
-            return View(model);
+            return BadRequest(model);
         }
 
-        [HttpGet]
-        public IActionResult PersonView()
-        {
-            return View();
-        }
-
-        [HttpPost]
+        [HttpPost("person")]
         public async Task<IActionResult> PersonView(Person model)
         {
-            
             if (ModelState.IsValid)
             {
-                foreach(var person in _context.Persons)
+                foreach (var person in _context.Persons)
                 {
                     _context.Remove(person);
                 }
@@ -121,15 +100,14 @@ namespace Vsety.API.Controllers
                     _context.Remove(person);
                 }
                 await _personsRepository.AddPerson(HttpContext.Request.Cookies["login"], model);
-                
+
 
                 await _context.SaveChangesAsync();
-                
-                return RedirectToAction("Autorisation", "Account");
+
+                return Ok(new { message = "Person details saved successfully" });
             }
-            return View(model);
+            return BadRequest(model);
         }
     }
-
-
 }
+

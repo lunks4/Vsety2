@@ -1,21 +1,25 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
+using Vsety.Application.Services;
 using Vsety.Core.Models;
 using Vsety.Core.Models.ViewModel;
 using Vsety.DataAccess.Entities;
 using Vsety.DataAccess.Repositories;
 
-namespace WebApplication4.Controllers
+namespace Vsety.APINew.Controllers
 {
-    public class HomeController : Controller
+    [ApiController]
+    [Route("homeApi/[controller]")]
+    public class HomeApiController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger<HomeApiController> _logger;
         private readonly IUsersRepository _usersRepository;
         private readonly IPersonsRepository _personsRepository;
 
-        public HomeController(ILogger<HomeController> logger, IUsersRepository usersRepository, IPersonsRepository personsRepository)
+        public HomeApiController(ILogger<HomeApiController> logger, IUsersRepository usersRepository, IPersonsRepository personsRepository)
         {
             _logger = logger;
             _usersRepository = usersRepository;
@@ -24,7 +28,7 @@ namespace WebApplication4.Controllers
 
         [Authorize]
         [HttpGet]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Identification()
         {
             string tokenValue = HttpContext.Request.Cookies["token"];
             JwtSecurityToken token1 = new JwtSecurityTokenHandler().ReadJwtToken(tokenValue);
@@ -45,22 +49,10 @@ namespace WebApplication4.Controllers
             };
             User user1 = new User(user.Id, user.Mail, user.PasswordHash, person1);
             IndexViewModel model = new IndexViewModel() { User = user1, };
-            return View(model);
+            return Ok(model);
         }
 
-        [Authorize]
-        [HttpPost]
-        public async Task<IActionResult> Index(IndexViewModel model)
-        {
-            return View(model);
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
-
+        [NonAction]
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

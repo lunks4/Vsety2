@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Vsety.Application\Vsety.Application.csproj" />
+    <ProjectReference Include="..\Vsety.Core\Vsety.Core.csproj" />
+    <ProjectReference Include="..\Vsety.DataAccess\Vsety.DataAccess.csproj" />
+    <ProjectReference Include="..\Vsety.Infrastructure\Vsety.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

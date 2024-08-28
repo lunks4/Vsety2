@@ -57,13 +57,13 @@ namespace Vsety.DataAccess.Repositories
             if (uploadedFile != null)
             {
                 // путь к папке Files
-                string path = "/img/" + uploadedFile.FileName;
+                string path = "C:/Users/ilyap/source/repos/Vsety/Vsety/wwwroot/img/" + uploadedFile.FileName;
                 // сохраняем файл в папку Files в каталоге wwwroot
-                using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                using (var fileStream = new FileStream(path, FileMode.Create))
                 {
                     await uploadedFile.CopyToAsync(fileStream);
                 }
-                ImgEntity file = new ImgEntity {Id = ImgId, Name = uploadedFile.FileName, Path = path };
+                ImgEntity file = new ImgEntity {Id = ImgId, Path = path };
                 _context.Imgs.Add(file);
                 _context.SaveChanges();
             }
@@ -76,13 +76,13 @@ namespace Vsety.DataAccess.Repositories
             if (uploadedFile != null)
             {
                 // путь к папке Files
-                string path = "/img/" + uploadedFile.FileName;
+                string path = "C:/Users/ilyap/source/repos/Vsety/Vsety/wwwroot/img/" + uploadedFile.FileName;
                 // сохраняем файл в папку Files в каталоге wwwroot
-                using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                using (var fileStream = new FileStream(path, FileMode.Create))
                 {
                     await uploadedFile.CopyToAsync(fileStream);
                 }
-                ImgEntity file = new ImgEntity { Id = ImgId, Name = uploadedFile.FileName, Path = path };
+                ImgEntity file = new ImgEntity { Id = ImgId, Path = path };
                 _context.Imgs.Add(file);
                 _context.SaveChanges();
             }

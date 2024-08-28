@@ -1,26 +1,23 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
-using Microsoft.EntityFrameworkCore;
-using Vsety.DataAccess;
-using Vsety.Core.Models;
-using Vsety.Core.Models.ViewModel;
-using Org.BouncyCastle.Asn1.Ocsp;
 using Vsety.Application.Services;
+using Vsety.Core.Models.ViewModel;
+using Vsety.Core.Models;
 using Vsety.DataAccess.Repositories;
+using Vsety.DataAccess;
 using Vsety.Infrastructure;
-using System.Xml;
-
 
 namespace Vsety.API.Controllers
 {
-    public class AccountController : Controller
+    [ApiController]
+    [Route("api/[controller]")]
+    public class AccountApiController : Controller
     {
         private readonly ApplicationContext _context;
         private readonly IUsersRepository _usersRepository;
         private readonly IPasswordHasher _passwordHasher;
         private readonly IJwtProvider _jwtProvider;
         private readonly IPersonsRepository _personsRepository;
-        public AccountController(ApplicationContext context, 
+        public AccountApiController(ApplicationContext context,
             IUsersRepository usersRepozitory,
             IPasswordHasher passwordHasher,
             IJwtProvider jwtProvider,
@@ -32,14 +29,9 @@ namespace Vsety.API.Controllers
             _jwtProvider = jwtProvider;
             _personsRepository = personsRepository;
         }
-        [HttpGet]
-        public IActionResult Autorisation()
-        {
-            return View();
-        }
 
-        [HttpPost]
-        public async Task<IActionResult> Autorisation(AutorisationViewModel model)
+        [HttpPost("authorize")]
+        public async Task<IActionResult> Autorisation([FromBody] AutorisationViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -67,14 +59,8 @@ namespace Vsety.API.Controllers
             }
         }
 
-        [HttpGet]
-        public IActionResult RegisterView()
-        {
-            return View();
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> RegisterView(RegisterViewModel model)
+        [HttpPost("register")]
+        public async Task<IActionResult> RegisterView([FromBody] RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
@@ -100,19 +86,18 @@ namespace Vsety.API.Controllers
             return View(model);
         }
 
-        [HttpGet]
-        public IActionResult PersonView()
+        [HttpPost("person")]
+        public async Task<IActionResult> PersonView([FromBody] Person model)
         {
-            return View();
-        }
+            if (model.avatar != null)
+            {
+                model.avatarPath.Path = "/img/" + model.avatar.FileName;
+                model.avatarPath.Name = model.avatar.FileName;
+            }
 
-        [HttpPost]
-        public async Task<IActionResult> PersonView(Person model)
-        {
-            
             if (ModelState.IsValid)
             {
-                foreach(var person in _context.Persons)
+                foreach (var person in _context.Persons)
                 {
                     _context.Remove(person);
                 }
@@ -121,15 +106,14 @@ namespace Vsety.API.Controllers
                     _context.Remove(person);
                 }
                 await _personsRepository.AddPerson(HttpContext.Request.Cookies["login"], model);
-                
+
 
                 await _context.SaveChangesAsync();
-                
+
                 return RedirectToAction("Autorisation", "Account");
             }
             return View(model);
         }
     }
-
-
+}
 }

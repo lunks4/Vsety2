@@ -1,0 +1,6 @@
+@Vsety.APINew_HostAddress = http://localhost:5029
+
+GET {{Vsety.APINew_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
