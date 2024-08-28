@@ -15,13 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vsety.Infrastructure", "Vse
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vsety.APINew", "Vsety.APINew\Vsety.APINew.csproj", "{2637DBD2-041E-495D-9916-F574CEF7B4A0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{F35FD6AD-F7CF-4C70-ACA5-F32831A13BB7}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{E92063F1-E8B4-424E-9586-2C24221F7B2F}"
-	ProjectSection(SolutionItems) = preProject
-		TextFile1.txt = TextFile1.txt
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,14 +48,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{629CC9D3-FB2F-4878-9026-32A944F4172A} = {F35FD6AD-F7CF-4C70-ACA5-F32831A13BB7}
-		{D68C5441-9C8E-44D2-86AF-8A858FCDA856} = {F35FD6AD-F7CF-4C70-ACA5-F32831A13BB7}
-		{51840C62-C95D-4DD8-987D-B2D7742ADD32} = {F35FD6AD-F7CF-4C70-ACA5-F32831A13BB7}
-		{8C38FF1F-7534-43E2-9A92-5292A788BA0C} = {F35FD6AD-F7CF-4C70-ACA5-F32831A13BB7}
-		{AD60BEE9-BE62-4450-B093-92D8A3ADA9CB} = {F35FD6AD-F7CF-4C70-ACA5-F32831A13BB7}
-		{2637DBD2-041E-495D-9916-F574CEF7B4A0} = {F35FD6AD-F7CF-4C70-ACA5-F32831A13BB7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {55C83272-FCD6-457F-904E-615606C73918}
