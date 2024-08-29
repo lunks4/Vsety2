@@ -18,9 +18,16 @@ namespace Vsety.DataAccess.Entities
         public DateTime Birthday { get; set;}
         [DataType(DataType.Text)]
         public string Nickname { get; set; }
-        //public Guid? UserId { get; set; }
-        [ForeignKey("ImgEntity")]
-        public Guid ImgId { get; set; } = Guid.Empty;
-        public ImgEntity? img { get; set; }
+
+        public string? Description { get; set; }
+
+
+        public Guid UserId { get; set; }
+        public UserEntity User { get; set; }
+
+
+
+
+        public ImgEntity? Img { get; set; }
     }
 }

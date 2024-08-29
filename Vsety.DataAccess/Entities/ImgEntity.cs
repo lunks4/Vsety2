@@ -14,6 +14,15 @@ namespace Vsety.DataAccess.Entities
         public Guid Id { get; set; }
         [Required]
         public string Path { get; set; } = string.Empty;
-        //public Guid? PersonId { get; set; }
+
+
+
+        public PostEntity? Post { get; set; }
+
+
+
+
+        public Guid? PersonId { get; set; }
+        public PersonEntity? Person { get; set; }
     }
 }

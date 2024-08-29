@@ -1,0 +1,120 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    margin-left: auto;
+    margin-right: auto;
+    width: 60em;
+}
+
+.container {
+    
+}
+
+.combo1 {
+
+}
+
+.person1 {
+}
+
+.block2 {
+}
+
+.rounded-circle {
+    margin: 5px;
+    max-height:70px;
+    max-width:70px;
+}
+
+#col1 {
+    max-width:400px;
+}
+
+.card {
+    padding: 10px;
+}
+
+.bord {
+    
+}
+
+.row {
+    
+}
+
+#photo1 {
+    height: 50px;
+    width: 50px;
+}
+
+#block2 {
+}
+
+.PostHeader {
+    display: flex;
+    align-items: center;
+}
+
+.PostHeaderTitle {
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: nowrap;
+    margin-right: 10px;
+}
+
+.PostHeaderTitle-Header {
+
+}
+
+.likeButton {
+    max-height: 51px;
+    padding:2px;
+   
+}
+
+.likeButtons {
+    display: flex; 
+}
+
+.btn-custom {
+    background-color: white;
+    border-radius: 40%;
+}
+
+
+.textSmall {
+    font-size: 0.8rem;
+}
+
+
+.autorization {
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 30%;
+    justify-content: center;
+    align-items: center;
+    width: 1000px;
+    height: 700px;
+    text-align: center;
+    border-radius:5%;
+    border: 2px solid black;
+}

@@ -2,9 +2,9 @@
 using Vsety.Application.Services;
 using Vsety.Core.Models.ViewModel;
 using Vsety.Core.Models;
-using Vsety.DataAccess.Repositories;
 using Vsety.DataAccess;
 using Vsety.Infrastructure;
+using Vsety.DataAccess.Repositories.Interfaces;
 
 namespace Vsety.APINew.Controllers
 {
@@ -100,7 +100,6 @@ namespace Vsety.APINew.Controllers
                     _context.Remove(person);
                 }
                 await _personsRepository.AddPerson(HttpContext.Request.Cookies["login"], model);
-
 
                 await _context.SaveChangesAsync();
 

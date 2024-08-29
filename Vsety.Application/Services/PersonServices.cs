@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Vsety.Core.Models;
-using Vsety.DataAccess.Repositories;
+using Vsety.DataAccess.Repositories.Interfaces;
 using Vsety.Infrastructure;
 
 namespace Vsety.Application.Services

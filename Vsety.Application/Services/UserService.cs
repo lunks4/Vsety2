@@ -1,8 +1,8 @@
 ﻿using Vsety.Infrastructure;
 using Vsety.Core.Models;
-using Vsety.DataAccess.Repositories;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using Vsety.DataAccess.Repositories.Interfaces;
 
 namespace Vsety.Application.Services
 {

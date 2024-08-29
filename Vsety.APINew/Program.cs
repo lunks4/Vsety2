@@ -5,13 +5,18 @@ using Vsety.DataAccess;
 using Vsety.Infrastructure;
 using Vsety.APINew.Extension;
 using Microsoft.AspNetCore.CookiePolicy;
+using Vsety.DataAccess.Repositories.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 // Add services to the container.
 
 builder.Services.AddDbContext<ApplicationContext>(options =>
-    options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 21))));
+{
+    options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 21)));
+    options.EnableSensitiveDataLogging();
+});
+
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
 builder.Services.AddApiAuthentitacion();
@@ -27,6 +32,8 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<IJwtProvider, JwtProvider>();
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IPersonsRepository, PersonsRepository>();
+builder.Services.AddScoped<IImageRepository, ImageRepository>();
+builder.Services.AddScoped<IPostRepository, PostRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

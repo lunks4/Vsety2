@@ -1,6 +1,7 @@
 ﻿using Vsety.Core.Models;
 using Microsoft.EntityFrameworkCore;
 using Vsety.DataAccess.Entities;
+using Vsety.DataAccess.Repositories.Interfaces;
 
 namespace Vsety.DataAccess.Repositories
 {
@@ -29,14 +30,12 @@ namespace Vsety.DataAccess.Repositories
         public async Task<UserEntity?> GetById(Guid id)
         {
             return await _context.Users
-                .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<UserEntity?> GetByMail(string mail)
         {
             return await _context.Users
-                .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.Mail == mail) ?? throw new Exception();
         }
 
@@ -80,6 +79,7 @@ namespace Vsety.DataAccess.Repositories
                 PasswordHash = user.PasswordHash,
                 //Person = user.PersonEntity
             };
+            _context.ChangeTracker.Clear();
             await _context.Users.AddAsync(userEntity);
             await _context.SaveChangesAsync();
         }

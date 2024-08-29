@@ -10,13 +10,31 @@ using Vsety.DataAccess.Entities;
 
 namespace Vsety.DataAccess.Configuration
 {
-    //public class UserConfiguration : IEntityTypeConfiguration<UserEntity>
-    //{
-    //    //public void Configure(EntityTypeBuilder<UserEntity> builder)
-    //    //{
-    //    //    builder.HasKey(x => x.Id); 
-    //    //}
+    public class UserConfiguration : IEntityTypeConfiguration<UserEntity>
+    {
+        public void Configure(EntityTypeBuilder<UserEntity> builder)
+        {
+            builder.HasKey(x => x.Id);
 
-        
-    //}
+            builder.HasOne(a => a.Person)
+                .WithOne(a => a.User)
+                .HasForeignKey<PersonEntity>(a => a.UserId);
+
+            builder.HasMany(a => a.PostLikes)
+                .WithMany(a => a.UserLikes);
+
+            builder.HasMany(a => a.PostReposts)
+                .WithMany(a => a.UserReposts);
+
+            builder.HasMany(a => a.Posts)
+                .WithOne(a => a.User)
+                .HasForeignKey(a => a.UserId);
+
+            builder.HasMany(a => a.Comments)
+                .WithOne(a => a.User)
+                .HasForeignKey(a => a.UserId);
+        }
+
+
+    }
 }

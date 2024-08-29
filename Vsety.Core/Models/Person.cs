@@ -6,8 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Vsety.Core.Models
 {
     public class Person
-    {
-        public Guid? Id { get; set; }
+    { 
         [Required]
         [DataType(DataType.Text)]
         public string Name { get; set; } 

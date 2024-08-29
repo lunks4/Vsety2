@@ -22,21 +22,81 @@ namespace Vsety.DataAccess.Migrations
 
             MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
+            modelBuilder.Entity("PostEntityUserEntity", b =>
+                {
+                    b.Property<Guid>("PostLikesId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("UserLikesId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("PostLikesId", "UserLikesId");
+
+                    b.HasIndex("UserLikesId");
+
+                    b.ToTable("PostEntityUserEntity");
+                });
+
+            modelBuilder.Entity("PostEntityUserEntity1", b =>
+                {
+                    b.Property<Guid>("PostRepostsId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("UserRepostsId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("PostRepostsId", "UserRepostsId");
+
+                    b.HasIndex("UserRepostsId");
+
+                    b.ToTable("PostEntityUserEntity1");
+                });
+
+            modelBuilder.Entity("Vsety.DataAccess.Entities.CommentEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("DescriptionComment")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("PostId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<TimeOnly?>("time")
+                        .HasColumnType("time(6)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PostId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Comments");
+                });
+
             modelBuilder.Entity("Vsety.DataAccess.Entities.ImgEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Path")
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<Guid?>("PersonId")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("PersonId")
+                        .IsUnique();
 
                     b.ToTable("Imgs");
                 });
@@ -54,12 +114,13 @@ namespace Vsety.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<string>("Gender")
+                    b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<Guid>("ImgId")
-                        .HasColumnType("char(36)");
+                    b.Property<string>("Gender")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -73,11 +134,44 @@ namespace Vsety.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ImgId");
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Persons");
+                });
+
+            modelBuilder.Entity("Vsety.DataAccess.Entities.PostEntity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("char(36)");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid?>("ImgId")
+                        .HasColumnType("char(36)");
+
+                    b.Property<DateTime>("Time")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("char(36)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ImgId")
+                        .IsUnique();
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Posts");
                 });
 
             modelBuilder.Entity("Vsety.DataAccess.Entities.UserEntity", b =>
@@ -94,34 +188,119 @@ namespace Vsety.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<Guid?>("PersonId")
-                        .HasColumnType("char(36)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("PersonId");
 
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Vsety.DataAccess.Entities.PersonEntity", b =>
+            modelBuilder.Entity("PostEntityUserEntity", b =>
                 {
-                    b.HasOne("Vsety.DataAccess.Entities.ImgEntity", "img")
+                    b.HasOne("Vsety.DataAccess.Entities.PostEntity", null)
                         .WithMany()
-                        .HasForeignKey("ImgId")
+                        .HasForeignKey("PostLikesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("img");
+                    b.HasOne("Vsety.DataAccess.Entities.UserEntity", null)
+                        .WithMany()
+                        .HasForeignKey("UserLikesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PostEntityUserEntity1", b =>
+                {
+                    b.HasOne("Vsety.DataAccess.Entities.PostEntity", null)
+                        .WithMany()
+                        .HasForeignKey("PostRepostsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Vsety.DataAccess.Entities.UserEntity", null)
+                        .WithMany()
+                        .HasForeignKey("UserRepostsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Vsety.DataAccess.Entities.CommentEntity", b =>
+                {
+                    b.HasOne("Vsety.DataAccess.Entities.PostEntity", "Post")
+                        .WithMany("UsersComments")
+                        .HasForeignKey("PostId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Vsety.DataAccess.Entities.UserEntity", "User")
+                        .WithMany("Comments")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Post");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Vsety.DataAccess.Entities.ImgEntity", b =>
+                {
+                    b.HasOne("Vsety.DataAccess.Entities.PersonEntity", "Person")
+                        .WithOne("Img")
+                        .HasForeignKey("Vsety.DataAccess.Entities.ImgEntity", "PersonId");
+
+                    b.Navigation("Person");
+                });
+
+            modelBuilder.Entity("Vsety.DataAccess.Entities.PersonEntity", b =>
+                {
+                    b.HasOne("Vsety.DataAccess.Entities.UserEntity", "User")
+                        .WithOne("Person")
+                        .HasForeignKey("Vsety.DataAccess.Entities.PersonEntity", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Vsety.DataAccess.Entities.PostEntity", b =>
+                {
+                    b.HasOne("Vsety.DataAccess.Entities.ImgEntity", "Img")
+                        .WithOne("Post")
+                        .HasForeignKey("Vsety.DataAccess.Entities.PostEntity", "ImgId");
+
+                    b.HasOne("Vsety.DataAccess.Entities.UserEntity", "User")
+                        .WithMany("Posts")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Img");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Vsety.DataAccess.Entities.ImgEntity", b =>
+                {
+                    b.Navigation("Post");
+                });
+
+            modelBuilder.Entity("Vsety.DataAccess.Entities.PersonEntity", b =>
+                {
+                    b.Navigation("Img");
+                });
+
+            modelBuilder.Entity("Vsety.DataAccess.Entities.PostEntity", b =>
+                {
+                    b.Navigation("UsersComments");
                 });
 
             modelBuilder.Entity("Vsety.DataAccess.Entities.UserEntity", b =>
                 {
-                    b.HasOne("Vsety.DataAccess.Entities.PersonEntity", "Person")
-                        .WithMany()
-                        .HasForeignKey("PersonId");
+                    b.Navigation("Comments");
 
                     b.Navigation("Person");
+
+                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }

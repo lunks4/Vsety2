@@ -10,6 +10,8 @@ namespace Vsety.Core.Models.ViewModel
     {
         public User? User { get; set; }
 
+        //public AddPostViewModel? AddPost { get; set; }
+
         public List<Post>? Posts { get; set; }
     }
 }

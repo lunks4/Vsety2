@@ -3,24 +3,30 @@ using Vsety.DataAccess.Entities;
 using Vsety.Core.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Hosting;
+using Vsety.DataAccess.Repositories.Interfaces;
 
 namespace Vsety.DataAccess.Repositories
 {
     public class PersonsRepository : IPersonsRepository
     {
         private readonly ApplicationContext _context;
-        private readonly IWebHostEnvironment _appEnvironment;
-        public PersonsRepository(ApplicationContext context, IWebHostEnvironment appEnvironment)
+        private readonly IImageRepository _imageRepository;
+        public PersonsRepository(ApplicationContext context, IImageRepository imageRepository)
         {
             _context = context;
-            _appEnvironment = appEnvironment;
+            _imageRepository = imageRepository;
         }
 
         public async Task<PersonEntity?> GetById(Guid id)
         {
             return await _context.Persons
-                .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.Id == id);
+        }
+
+        public async Task<PersonEntity?> GetByUserId(Guid id)
+        {
+            return await _context.Persons
+                .FirstOrDefaultAsync(c => c.UserId == id);
         }
 
         public async Task AddPerson(string userLogin, Person person)
@@ -28,6 +34,8 @@ namespace Vsety.DataAccess.Repositories
             var user = _context.Users.FirstOrDefault(c => c.Mail == userLogin)
                 ?? throw new Exception();
 
+            var id = Guid.NewGuid();
+            var Path = "C:/Users/ilyap/source/repos/Vsety/Vsety.APINew/wwwroot/img/" + id + ".jpg";
             var personEntity = new PersonEntity()
             {
                 Id = Guid.NewGuid(),
@@ -37,68 +45,40 @@ namespace Vsety.DataAccess.Repositories
                 City = person.City,
                 Birthday = person.Birthday,
                 Nickname = person.Nickname,
-                ImgId = Guid.NewGuid(),
+                Description = person.Description,
+                UserId = user.Id,
+                User = user,
             };
-            await AddAvatarFile(personEntity.ImgId, person.avatar, personEntity);
-            user.Person = personEntity;
-            user.PersonId = personEntity.Id;
+            var file = await _imageRepository.AddFile(id, person.avatar, Path);
+            
+            personEntity.Img = file;
 
-            _context.Update(user);
+            personEntity.Img.PersonId = personEntity.Id;
+            personEntity.Img.Person = personEntity;
+
+            
+
+            _context.Update(personEntity.Img);
+
+            user.Person = personEntity;
 
             _context.Add(personEntity);
 
- 
+            _context.Update(user);
 
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task AddAvatarFile(Guid ImgId, IFormFile uploadedFile, PersonEntity person)
-        {
-            if (uploadedFile != null)
-            {
-                // путь к папке Files
-                string path = "C:/Users/ilyap/source/repos/Vsety/Vsety/wwwroot/img/" + uploadedFile.FileName;
-                // сохраняем файл в папку Files в каталоге wwwroot
-                using (var fileStream = new FileStream(path, FileMode.Create))
-                {
-                    await uploadedFile.CopyToAsync(fileStream);
-                }
-                ImgEntity file = new ImgEntity {Id = ImgId, Path = path };
-                _context.Imgs.Add(file);
-                _context.SaveChanges();
-            }
-
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task AddPostFile(Guid ImgId, IFormFile uploadedFile, PersonEntity person)
-        {
-            if (uploadedFile != null)
-            {
-                // путь к папке Files
-                string path = "C:/Users/ilyap/source/repos/Vsety/Vsety/wwwroot/img/" + uploadedFile.FileName;
-                // сохраняем файл в папку Files в каталоге wwwroot
-                using (var fileStream = new FileStream(path, FileMode.Create))
-                {
-                    await uploadedFile.CopyToAsync(fileStream);
-                }
-                ImgEntity file = new ImgEntity { Id = ImgId, Path = path };
-                _context.Imgs.Add(file);
-                _context.SaveChanges();
-            }
-
+            //_context.ChangeTracker.Clear();
             await _context.SaveChangesAsync();
         }
 
         public async Task<ImgEntity?> GetFileByIdLogo(Guid id)
         {
             return await _context.Imgs
-                .AsNoTracking()
                 .FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task<Guid> Update(Guid id, string name, string surname, string gender, string city, DateTime birthday, string nick)
         {
+            _context.ChangeTracker.Clear();
             await _context.Persons
                 .Where(b => b.Id == id)
                 .ExecuteUpdateAsync(s => s
