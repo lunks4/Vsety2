@@ -5,6 +5,7 @@ using Vsety.Core.Models;
 using Vsety.DataAccess;
 using Vsety.Infrastructure;
 using Vsety.DataAccess.Repositories.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Vsety.APINew.Controllers
 {
@@ -86,6 +87,7 @@ namespace Vsety.APINew.Controllers
             return BadRequest(model);
         }
 
+        [Authorize]
         [HttpPost("person")]
         public async Task<IActionResult> PersonView(Person model)
         {

@@ -27,7 +27,7 @@ namespace Vsety.DataAccess.Repositories
                 {
                     await uploadedFile.CopyToAsync(fileStream);
                 }
-                ImgEntity file = new ImgEntity { Id = ImgId, Path = path };
+                ImgEntity file = new ImgEntity { Id = ImgId, Name = ImgId + ".jpg", Path = path };
     
                 _context.Imgs.Add(file);
                 await _context.SaveChangesAsync();
@@ -42,6 +42,26 @@ namespace Vsety.DataAccess.Repositories
         {
             return await _context.Imgs
                .FirstOrDefaultAsync(c => c.PersonId == personId);
+        }
+
+        public async Task<ImgEntity?> GetById(Guid imgId)
+        {
+            return await _context.Imgs
+               .FirstOrDefaultAsync(c => c.Id == imgId);
+        }
+
+        public string GetContentType(string path)
+        {
+            var types = new Dictionary<string, string>
+            {
+                {".pdf", "application/pdf"},
+                {".txt", "text/plain"},
+                {".jpg", "image/jpeg"},
+                {".png", "image/png"}
+                // Добавьте другие MIME-типы при необходимости
+            }; 
+            var ext = Path.GetExtension(path).ToLowerInvariant();
+            return types[ext];
         }
 
         public async Task DeleteFile(Guid ImgId)

@@ -58,18 +58,18 @@ namespace Vsety.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("DescriptionComment")
+                    b.Property<string>("Comment")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<Guid>("PostId")
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime?>("Time")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
-
-                    b.Property<TimeOnly?>("time")
-                        .HasColumnType("time(6)");
 
                     b.HasKey("Id");
 
@@ -85,6 +85,10 @@ namespace Vsety.DataAccess.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Path")
                         .IsRequired()
@@ -115,7 +119,6 @@ namespace Vsety.DataAccess.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<string>("Gender")
@@ -163,6 +166,15 @@ namespace Vsety.DataAccess.Migrations
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
+
+                    b.Property<int>("countComments")
+                        .HasColumnType("int");
+
+                    b.Property<int>("countLikes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("countReposts")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

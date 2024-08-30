@@ -16,8 +16,8 @@ namespace Vsety.DataAccess.Entities
         public UserEntity? User { get; set; }
 
 
-        public TimeOnly? time { get; set; }
-        public string DescriptionComment { get; set; } = string.Empty;
+        public DateTime? Time { get; set; }
+        public string Comment { get; set; } = string.Empty;
 
 
         public Guid PostId { get; set; }

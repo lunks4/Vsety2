@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Conventions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,6 +11,7 @@ namespace Vsety.DataAccess.Entities
 {
     public class PostEntity
     {
+
         public Guid Id { get; set; }
 
         public DateTime Time { get; set; }
@@ -17,12 +19,17 @@ namespace Vsety.DataAccess.Entities
         public string Description { get; set; } = String.Empty;
 
 
-        public List<UserEntity> UserLikes { get; set; } = [];
+        public List<UserEntity> UserLikes { get; private set; } = [];
 
-        public List<CommentEntity> UsersComments { get; set; } = [];
+        public int countLikes { get; set; } = 0;
 
-        public List<UserEntity> UserReposts { get; set; } = [];
+        public List<CommentEntity> UsersComments { get; private set; } = [];
 
+        public int countComments { get; set; } = 0;
+
+        public List<UserEntity> UserReposts { get; private set; } = [];
+
+        public int countReposts { get; set; } = 0;
 
         public Guid? ImgId { get; set; }
         public ImgEntity? Img { get; set; }

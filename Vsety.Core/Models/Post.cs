@@ -12,7 +12,9 @@ namespace Vsety.Core.Models
     {
         public Guid Id { get; set; }
         public DateTime Time {  get; set; }
-        public IFormFile file { get; set; }
+        public IFormFile? file { get; set; }
+
+        public Img? Img { get; set; }
         public string Description { get; set; } = String.Empty;
 
         public List<User>? UsersLikes { get; set; }

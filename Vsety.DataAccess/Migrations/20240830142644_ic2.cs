@@ -5,7 +5,7 @@
 namespace Vsety.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class ic45 : Migration
+    public partial class ic2 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.DataProtection.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using System.Diagnostics;
 using System.IdentityModel.Tokens.Jwt;
 using Vsety.Application.Services;
@@ -62,6 +63,27 @@ namespace Vsety.APINew.Controllers
         }
 
         [Authorize]
+        [HttpGet("GetPerson")]
+        public async Task<IActionResult> GetPersonByUserId(Guid userId)
+        {
+            UserEntity user = await _usersRepository.GetById(userId);
+            PersonEntity person = await _personsRepository.GetByUserId(userId);
+            ImgEntity img = await _imageRepository.GetByPersonId(person.Id);
+
+
+            return Ok(person);
+        }
+
+        [Authorize]
+        [HttpGet("GetAllPosts")]
+        public async Task<IActionResult> GetAllPosts(int count)
+        {
+            var posts = await _postRepository.GetAllPosts(count);
+
+            return Ok(posts);
+        }
+
+        [Authorize]
         [HttpGet("GetAvatar")]
         public async Task<IActionResult> GetAvatar(Guid userId)
         {
@@ -76,24 +98,112 @@ namespace Vsety.APINew.Controllers
             }
             memory.Position = 0;
 
-            return File(memory, "image/jpg", "example.jpg");
+            return File(memory, _imageRepository.GetContentType(img.Path), "Avatar.jpg");
         }
+
+        [Authorize]
+        [HttpGet("GetPostFile")]
+        public async Task<IActionResult> GetPostFile(Guid imgId)
+        {
+            ImgEntity img = await _imageRepository.GetById(imgId);
+
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(img.Path, FileMode.Open))
+            {
+                stream.CopyTo(memory);
+            }
+            memory.Position = 0;
+
+            return File(memory, _imageRepository.GetContentType(img.Path), img.Id + ".jpg");
+        }
+
+        
+        [NonAction]
+        public async Task<IActionResult> GetFile(Guid imgId)
+        {
+            ImgEntity img = await _imageRepository.GetById(imgId);
+
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(img.Path, FileMode.Open))
+            {
+                stream.CopyTo(memory);
+            }
+            memory.Position = 0;
+
+            return File(memory, _imageRepository.GetContentType(img.Path), img.Id + ".jpg");
+        }
+
+        //[Authorize]
+        //[HttpGet("GetAllPosts")]
+        //public async Task<IActionResult> GetAllPosts(int count)
+        //{
+        //    UserEntity user = await _usersRepository.GetById(userId);
+        //    PersonEntity person = await _personsRepository.GetByUserId(userId);
+        //    ImgEntity img = await _imageRepository.GetByPersonId(person.Id);
+
+        //    var memory = new MemoryStream();
+        //    using (var stream = new FileStream(img.Path, FileMode.Open))
+        //    {
+        //        stream.CopyTo(memory);
+        //    }
+        //    memory.Position = 0;
+
+        //    return File(memory, _imageRepository.GetContentType(img.Path), "Avatar.jpg");
+        //}
 
         [Authorize]
         [HttpPost("AddPost")]
         public async Task<IActionResult> AddPost(AddPostViewModel model)
-        { 
+        {
+            UserEntity user = await _usersRepository.GetById(model.UserId);
             Post post = new Post()
             {
                 Id = Guid.NewGuid(),
-                User = model.User,
                 Time = DateTime.UtcNow,
-                file = model.file,
                 Description = model.Description,
+                file = model.file,
             };
-            await _postRepository.AddPost(model.User.Id, post);
+            PostEntity postEntity = await _postRepository.AddPost(model.UserId, post);
 
-            return Ok(post);
+            return Ok(postEntity);
+        }
+
+
+        [Authorize]
+        [HttpPatch("AddCommentary")]
+        public async Task<IActionResult> AddCommentary(AddCommentaryViewModel model)
+        {
+            UserEntity user = await _usersRepository.GetById(model.UserId);
+            PostEntity post = await _postRepository.GetById(model.PostId);
+
+            var comment = await _postRepository.AddCommentary(post, user, model.Comment);
+
+            return Ok(comment);
+
+        }
+
+        [Authorize]
+        [HttpPatch("AddLike")]
+        public async Task<IActionResult> AddLike(AddCommentaryViewModel model)
+        {
+            UserEntity user = await _usersRepository.GetById(model.UserId);
+            PostEntity post = await _postRepository.GetById(model.PostId);
+
+            var post1 = await _postRepository.AddLike(post, user);
+
+            return Ok(post1);
+        }
+
+        [Authorize]
+        [HttpPatch("AddRepost")]
+        public async Task<IActionResult> AddRepost(AddCommentaryViewModel model)
+        {
+            UserEntity user = await _usersRepository.GetById(model.UserId);
+            PostEntity post = await _postRepository.GetById(model.PostId);
+
+            var post1 = await _postRepository.AddRepost(post, user);
+
+            return Ok(post1);
         }
 
         [NonAction]

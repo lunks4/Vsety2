@@ -22,5 +22,7 @@ namespace Vsety.Core.Models
         public string? Description { get; set; }
 
         public IFormFile? avatar { get; set; }
+
+        public Img? img { get; set; }
     }
 }

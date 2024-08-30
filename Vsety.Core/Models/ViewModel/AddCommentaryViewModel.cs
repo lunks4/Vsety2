@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,11 +6,12 @@ using System.Threading.Tasks;
 
 namespace Vsety.Core.Models.ViewModel
 {
-    public class AddPostViewModel
+    public class AddCommentaryViewModel
     {
-        public Guid UserId { get; set; }
-        public string Description { get; set; } = string.Empty;
+        public Guid PostId { get; set; }
 
-        public IFormFile? file { get; set; }
+        public Guid UserId { get; set; }
+
+        public string Comment { get; set; } = string.Empty;
     }
 }

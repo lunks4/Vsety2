@@ -12,6 +12,8 @@ namespace Vsety.DataAccess.Entities
     {
         [Key]
         public Guid Id { get; set; }
+
+        public string Name { get; set; } = string.Empty;
         [Required]
         public string Path { get; set; } = string.Empty;
 

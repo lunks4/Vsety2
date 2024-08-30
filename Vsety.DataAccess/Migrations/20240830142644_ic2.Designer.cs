@@ -12,8 +12,8 @@ using Vsety.DataAccess;
 namespace Vsety.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20240829193238_ic46")]
-    partial class ic46
+    [Migration("20240830142644_ic2")]
+    partial class ic2
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -61,18 +61,18 @@ namespace Vsety.DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<string>("DescriptionComment")
+                    b.Property<string>("Comment")
                         .IsRequired()
                         .HasColumnType("longtext");
 
                     b.Property<Guid>("PostId")
                         .HasColumnType("char(36)");
 
+                    b.Property<DateTime?>("Time")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
-
-                    b.Property<TimeOnly?>("time")
-                        .HasColumnType("time(6)");
 
                     b.HasKey("Id");
 
@@ -88,6 +88,10 @@ namespace Vsety.DataAccess.Migrations
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
 
                     b.Property<string>("Path")
                         .IsRequired()
@@ -115,6 +119,9 @@ namespace Vsety.DataAccess.Migrations
 
                     b.Property<string>("City")
                         .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Description")
                         .HasColumnType("longtext");
 
                     b.Property<string>("Gender")
@@ -162,6 +169,15 @@ namespace Vsety.DataAccess.Migrations
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
+
+                    b.Property<int>("countComments")
+                        .HasColumnType("int");
+
+                    b.Property<int>("countLikes")
+                        .HasColumnType("int");
+
+                    b.Property<int>("countReposts")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
