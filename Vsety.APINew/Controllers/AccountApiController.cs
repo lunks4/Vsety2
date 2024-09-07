@@ -6,6 +6,8 @@ using Vsety.DataAccess;
 using Vsety.Infrastructure;
 using Vsety.DataAccess.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using System.IdentityModel.Tokens.Jwt;
+using Newtonsoft.Json.Linq;
 
 namespace Vsety.APINew.Controllers
 {
@@ -40,9 +42,9 @@ namespace Vsety.APINew.Controllers
             if (ModelState.IsValid)
             {
                 var userService = new UserService(_usersRepository, _passwordHasher, _jwtProvider);
-                if (_usersRepository.UserExist(model.Login).Result)
+                if (_usersRepository.UserExist(model.email).Result)
                 {
-                    var token = await userService.Login(model.Login, model.Password);
+                    var token = await userService.Login(model.email, model.password);
                     if (token == "")
                     {
                         return BadRequest(new { message = "Неправильный пароль" });
@@ -66,15 +68,15 @@ namespace Vsety.APINew.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (!_usersRepository.UserExist(model.Login).Result)
+                if (!_usersRepository.UserExist(model.email).Result)
                 {
                     foreach (var person1 in _context.Users)
                     {
                         _context.Remove(person1);
                     }
                     var userService = new UserService(_usersRepository, _passwordHasher, _jwtProvider);
-                    await userService.Register(model.Login, model.Password);
-                    HttpContext.Response.Cookies.Append("login", model.Login);
+                    await userService.Register(model.email, model.password);
+                    HttpContext.Response.Cookies.Append("login", model.email);
                     await _context.SaveChangesAsync();
 
                     return Ok(new { message = "User registered successfully" });
@@ -101,7 +103,23 @@ namespace Vsety.APINew.Controllers
                 {
                     _context.Remove(person);
                 }
-                await _personsRepository.AddPerson(HttpContext.Request.Cookies["login"], model);
+                var authHeader = HttpContext.Request.Headers["Authorization"].ToString();
+
+                // Проверяем, что заголовок не пустой и начинается с "Bearer"
+                if (authHeader != null && authHeader.StartsWith("Bearer"))
+                {
+                    // Извлекаем сам токен
+                    var token = authHeader.Substring("Bearer ".Length).Trim();
+
+                    // Логика обработки токена (если нужно)
+                    // Например, можно проверить токен или декодировать его
+                    // Далее выполняем логику обработки данных формы
+                    // ...
+
+                    JwtSecurityToken token1 = new JwtSecurityTokenHandler().ReadJwtToken(token);
+                    await _personsRepository.AddPerson(Guid.Parse(token1.Claims.FirstOrDefault(c => c.Type == "userId")?.Value), model);
+                }
+                
 
                 await _context.SaveChangesAsync();
 

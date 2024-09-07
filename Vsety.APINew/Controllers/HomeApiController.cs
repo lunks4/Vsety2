@@ -53,7 +53,7 @@ namespace Vsety.APINew.Controllers
                 Surname = person.Surname,
                 Gender = person.Gender,
                 City = person.City,
-                Birthday = person.Birthday,
+                Birthday = (person.Birthday).ToString("d"),
                 Nickname = person.Nickname,
                 Description = person.Description,
             };
@@ -64,14 +64,29 @@ namespace Vsety.APINew.Controllers
 
         [Authorize]
         [HttpGet("GetPerson")]
-        public async Task<IActionResult> GetPersonByUserId(Guid userId)
+        public async Task<IActionResult> GetPersonByUserId()
         {
-            UserEntity user = await _usersRepository.GetById(userId);
-            PersonEntity person = await _personsRepository.GetByUserId(userId);
-            ImgEntity img = await _imageRepository.GetByPersonId(person.Id);
+            var authHeader = HttpContext.Request.Headers["Authorization"].ToString();
 
+            // ѕровер€ем, что заголовок не пустой и начинаетс€ с "Bearer"
+            if (authHeader != null && authHeader.StartsWith("Bearer"))
+            {
+                // »звлекаем сам токен
+                var token = authHeader.Substring("Bearer ".Length).Trim();
 
-            return Ok(person);
+                // Ћогика обработки токена (если нужно)
+                // Ќапример, можно проверить токен или декодировать его
+                // ƒалее выполн€ем логику обработки данных формы
+                // ...
+
+                JwtSecurityToken token1 = new JwtSecurityTokenHandler().ReadJwtToken(token);
+                Guid userId = Guid.Parse(token1.Claims.FirstOrDefault(c => c.Type == "userId")?.Value);
+                UserEntity user = await _usersRepository.GetById(userId);
+                PersonEntity person = await _personsRepository.GetByUserId(userId);
+                ImgEntity img = await _imageRepository.GetByPersonId(person.Id);
+                return Ok(person);
+            }
+            return BadRequest();
         }
 
         [Authorize]
@@ -85,20 +100,36 @@ namespace Vsety.APINew.Controllers
 
         [Authorize]
         [HttpGet("GetAvatar")]
-        public async Task<IActionResult> GetAvatar(Guid userId)
+        public async Task<IActionResult> GetAvatar()
         {
-            UserEntity user = await _usersRepository.GetById(userId);
-            PersonEntity person = await _personsRepository.GetByUserId(userId);
-            ImgEntity img = await _imageRepository.GetByPersonId(person.Id);
+            var authHeader = HttpContext.Request.Headers["Authorization"].ToString();
 
-            var memory = new MemoryStream();
-            using (var stream = new FileStream(img.Path, FileMode.Open))
+            // ѕровер€ем, что заголовок не пустой и начинаетс€ с "Bearer"
+            if (authHeader != null && authHeader.StartsWith("Bearer"))
             {
-                stream.CopyTo(memory);
-            }
-            memory.Position = 0;
+                // »звлекаем сам токен
+                var token = authHeader.Substring("Bearer ".Length).Trim();
 
-            return File(memory, _imageRepository.GetContentType(img.Path), "Avatar.jpg");
+                // Ћогика обработки токена (если нужно)
+                // Ќапример, можно проверить токен или декодировать его
+                // ƒалее выполн€ем логику обработки данных формы
+                // ...
+
+                JwtSecurityToken token1 = new JwtSecurityTokenHandler().ReadJwtToken(token);
+                Guid userId = Guid.Parse(token1.Claims.FirstOrDefault(c => c.Type == "userId")?.Value);
+                UserEntity user = await _usersRepository.GetById(userId);
+                PersonEntity person = await _personsRepository.GetByUserId(userId);
+                ImgEntity img = await _imageRepository.GetByPersonId(person.Id);
+                var memory = new MemoryStream();
+                using (var stream = new FileStream(img.Path, FileMode.Open))
+                {
+                    stream.CopyTo(memory);
+                }
+                memory.Position = 0;
+
+                return File(memory, _imageRepository.GetContentType(img.Path), "Avatar.jpg");
+            }
+            return BadRequest();
         }
 
         [Authorize]

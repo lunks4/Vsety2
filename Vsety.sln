@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vsety.Infrastructure", "Vse
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vsety.APINew", "Vsety.APINew\Vsety.APINew.csproj", "{2637DBD2-041E-495D-9916-F574CEF7B4A0}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "vsety.frontend", "Vsety.Frontend\vsety.frontend.esproj", "{75CD20EA-A690-4D49-9632-42963CC88BEE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,12 @@ Global
 		{2637DBD2-041E-495D-9916-F574CEF7B4A0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2637DBD2-041E-495D-9916-F574CEF7B4A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2637DBD2-041E-495D-9916-F574CEF7B4A0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75CD20EA-A690-4D49-9632-42963CC88BEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75CD20EA-A690-4D49-9632-42963CC88BEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75CD20EA-A690-4D49-9632-42963CC88BEE}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{75CD20EA-A690-4D49-9632-42963CC88BEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75CD20EA-A690-4D49-9632-42963CC88BEE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75CD20EA-A690-4D49-9632-42963CC88BEE}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

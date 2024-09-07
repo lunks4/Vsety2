@@ -1,0 +1,14 @@
+@font-face {
+    font-family: 'Bondi';
+    src: url('/fonts/bondi.otf') format('otf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Saira';
+    src: url('/fonts/Saira-Italic-VariableFont_wdth,wght.ttf') format('ttf'),
+            url('/fonts/Saira-VariableFont_wdth,wght.ttf') format('ttf');
+    font-weight: normal;
+    font-style: normal;
+}

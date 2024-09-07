@@ -1,0 +1,113 @@
+.body1 {
+    display: grid;
+
+    height: 100vh;
+
+    justify-content: center;
+
+    align-items: center;
+}
+
+.registration {
+    
+    display: grid;
+    grid-template-columns: 300px 1fr;
+
+    height: 500px;
+    width: 700px;
+
+    background-color: #ABC8ED;
+    
+    border-radius: 56px;
+    box-shadow: 0px 15px 15px rgba(0, 0, 0, 0.1);
+    
+}
+
+.auth-box1 {
+    
+    width: 300px;
+    height: 500px;
+    background-image: url('/400657_600.jpg');
+    background-size: cover; /* Растягивает изображение, чтобы оно заполнило div */
+    background-position: center center; /* Центрирует изображение в div */
+    background-repeat: no-repeat;
+    border-radius: 56px;
+    
+    
+    text-align: center;
+    
+}
+
+.auth-box2 {
+    background-color: #ABC8ED;
+    
+    padding: 5%;
+    border-radius: 56px;
+    
+    text-align: center;
+    
+}
+
+.logo {
+    margin-top: 50px;
+    font-family: 'Bondi';
+    color: rgb(255, 255, 255);
+    font-size: 54px;
+}
+
+.text {
+    color: rgb(255, 255, 255);
+    font-size: 24px;
+}
+
+
+.existing-account {
+    color: rgb(255, 255, 255);
+    font-size: 24px;
+}
+
+.link {
+    text-decoration: none;
+    color: blue;
+}
+
+
+
+
+
+
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ced4da;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    font-size: 16px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+    .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0px 0px 5px rgba(0, 123, 255, 0.5);
+    }
+
+.btn {
+    width: 100%;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }
