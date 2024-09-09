@@ -12,8 +12,8 @@ using Vsety.DataAccess;
 namespace Vsety.DataAccess.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20240830140255_ic1")]
-    partial class ic1
+    [Migration("20240907100818_ic")]
+    partial class ic
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

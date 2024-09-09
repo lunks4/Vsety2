@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Vsety.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class ic1 : Migration
+    public partial class ic : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

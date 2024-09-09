@@ -6,8 +6,8 @@ import { PostResponse } from "./page";
 type PostProps = {
     post: PostResponse
 }
-// {post}: PostProps
-export default function Post() {
+
+export default function Post({post}: PostProps) {
   const [isFollowed, setIsFollowed] = React.useState(false);
   const a = [1,2,3]
   const b = [...a]

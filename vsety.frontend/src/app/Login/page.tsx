@@ -63,7 +63,7 @@ export default function Home(){
             document.cookie = `authToken=${token}; path=/; secure; samesite=strict`;
       
             // Перенаправление на страницу входа после успешной регистрации
-            window.location.href = '/Home';
+            window.location.href = '/AboutMySelf';
           } catch (err) {
             console.error('Ошибка:', err);
             setMailError('Не удалось войти. Попробуйте снова.');
