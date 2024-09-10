@@ -6,6 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>0412b068-8977-42cc-9913-adbb74751238</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <Configurations>Debug;Release;erfgwegw</Configurations>
   </PropertyGroup>
 
   <ItemGroup>

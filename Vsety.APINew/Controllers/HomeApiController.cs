@@ -64,7 +64,7 @@ namespace Vsety.APINew.Controllers
 
         [Authorize]
         [HttpGet("GetPerson")]
-        public async Task<IActionResult> GetPersonByUserId()
+        public async Task<IActionResult> GetPerson()
         {
             var authHeader = HttpContext.Request.Headers["Authorization"].ToString();
 
@@ -90,10 +90,22 @@ namespace Vsety.APINew.Controllers
         }
 
         [Authorize]
-        [HttpGet("GetAllPosts")]
-        public async Task<IActionResult> GetAllPosts(int count)
+        [HttpGet("GetPersonByUserId")]
+        public async Task<IActionResult> GetPersonByUserId(Guid userId)
         {
-            var posts = await _postRepository.GetAllPosts(count);
+
+            UserEntity user = await _usersRepository.GetById(userId);
+            PersonEntity person = await _personsRepository.GetByUserId(userId);
+            ImgEntity img = await _imageRepository.GetByPersonId(person.Id);
+            return Ok(person);
+
+        }
+
+        [Authorize]
+        [HttpGet("GetAllPosts")]
+        public async Task<IActionResult> GetAllPosts(int page, int count)
+        {
+            var posts = await _postRepository.GetAllPosts(page ,count);
 
             return Ok(posts);
         }
@@ -148,7 +160,24 @@ namespace Vsety.APINew.Controllers
             return File(memory, _imageRepository.GetContentType(img.Path), img.Id + ".jpg");
         }
 
-        
+        [Authorize]
+        [HttpGet("GetPostLogo")]
+        public async Task<IActionResult> GetPostLogo(Guid userId)
+        {
+            UserEntity user = await _usersRepository.GetById(userId);
+            PersonEntity person = await _personsRepository.GetByUserId(userId);
+            ImgEntity img = await _imageRepository.GetByPersonId(person.Id);
+            var memory = new MemoryStream();
+            using (var stream = new FileStream(img.Path, FileMode.Open))
+            {
+                stream.CopyTo(memory);
+            }
+            memory.Position = 0;
+
+            return File(memory, _imageRepository.GetContentType(img.Path), "Avatar.jpg");
+        }
+
+
         [NonAction]
         public async Task<IActionResult> GetFile(Guid imgId)
         {
@@ -186,17 +215,35 @@ namespace Vsety.APINew.Controllers
         [HttpPost("AddPost")]
         public async Task<IActionResult> AddPost(AddPostViewModel model)
         {
-            UserEntity user = await _usersRepository.GetById(model.UserId);
-            Post post = new Post()
-            {
-                Id = Guid.NewGuid(),
-                Time = DateTime.UtcNow,
-                Description = model.Description,
-                file = model.file,
-            };
-            PostEntity postEntity = await _postRepository.AddPost(model.UserId, post);
+            var authHeader = HttpContext.Request.Headers["Authorization"].ToString();
 
-            return Ok(postEntity);
+            // ѕровер€ем, что заголовок не пустой и начинаетс€ с "Bearer"
+            if (authHeader != null && authHeader.StartsWith("Bearer"))
+            {
+                // »звлекаем сам токен
+                var token = authHeader.Substring("Bearer ".Length).Trim();
+
+                // Ћогика обработки токена (если нужно)
+                // Ќапример, можно проверить токен или декодировать его
+                // ƒалее выполн€ем логику обработки данных формы
+                // ...
+
+                JwtSecurityToken token1 = new JwtSecurityTokenHandler().ReadJwtToken(token);
+                Guid userId = Guid.Parse(token1.Claims.FirstOrDefault(c => c.Type == "userId")?.Value);
+                UserEntity user = await _usersRepository.GetById(userId);
+                Post post = new Post()
+                {
+                    Id = Guid.NewGuid(),
+                    Time = DateTime.UtcNow,
+                    Description = model.Description,
+                    file = model.file,
+                };
+                PostEntity postEntity = await _postRepository.AddPost(userId, post);
+
+                return Ok(postEntity);
+                
+            }
+            return BadRequest();
         }
 
 

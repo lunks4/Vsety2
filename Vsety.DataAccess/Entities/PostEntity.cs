@@ -34,7 +34,6 @@ namespace Vsety.DataAccess.Entities
         public Guid? ImgId { get; set; }
         public ImgEntity? Img { get; set; }
 
-
         public Guid UserId { get; set; }
         public UserEntity User { get; set; }
 

@@ -1,7 +1,9 @@
 ﻿using Google.Protobuf.Compiler;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Mysqlx.Crud;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,10 +19,12 @@ namespace Vsety.DataAccess.Repositories
     {
         private readonly ApplicationContext _context;
         private readonly IImageRepository _imageRepository;
-        public PostRepository(ApplicationContext context, IImageRepository imageRepository)
+        private readonly IPersonsRepository _personsRepository;
+        public PostRepository(ApplicationContext context, IImageRepository imageRepository, IPersonsRepository personsRepository)
         {
             _context = context;
             _imageRepository = imageRepository;
+            _personsRepository = personsRepository;
         }
 
         public async Task<PostEntity> AddPost(Guid userId, Post post)
@@ -28,6 +32,8 @@ namespace Vsety.DataAccess.Repositories
             var user = _context.Users.FirstOrDefault(c => c.Id == userId)
                 ?? throw new Exception();
 
+            PersonEntity person = await _personsRepository.GetByUserId(userId);
+            ImgEntity img = await _imageRepository.GetByPersonId(person.Id);
             var id = Guid.NewGuid();
             var path = "C:/Users/ilyap/source/repos/Vsety/Vsety.APINew/wwwroot/img/" + id + ".jpg";
             var postEntity = new PostEntity()
@@ -35,6 +41,7 @@ namespace Vsety.DataAccess.Repositories
                 Id = post.Id,
                 Time = post.Time,
                 Description = post.Description,
+      
                 UserId = userId,
                 User = user,
             };
@@ -128,10 +135,11 @@ namespace Vsety.DataAccess.Repositories
             return post;
         }
 
-        public async Task<List<PostEntity>> GetAllPosts(int count)
+        public async Task<List<PostEntity>> GetAllPosts(int page,int count)
         {
-            var posts = await _context.Posts
+            var posts = await _context.Posts  
                                     .OrderBy(p => p.Time)
+                                    .Skip(page)
                                     .Take(count)
                                     .ToListAsync();
 

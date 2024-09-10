@@ -9,7 +9,6 @@ namespace Vsety.Core.Models.ViewModel
 {
     public class AddPostViewModel
     {
-        public Guid UserId { get; set; }
         public string Description { get; set; } = string.Empty;
 
         public IFormFile? file { get; set; }

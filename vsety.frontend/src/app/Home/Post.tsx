@@ -9,18 +9,117 @@ type PostProps = {
 
 export default function Post({post}: PostProps) {
   const [isFollowed, setIsFollowed] = React.useState(false);
-  const a = [1,2,3]
-  const b = [...a]
+  const [logo, setLogo] = React.useState('');
+  const [file, setFile] = React.useState('');
+  const [error, setError] = React.useState(false);
+  const [person, setPerson] = React.useState('');
+
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+
+  const fetchData = async () => {
+    const jwtToken = getCookie('authToken');
+    const userId = post.userId;
+    
+      try {
+       
+        const response = await fetch('https://localhost:7233/homeApi/HomeApi/GetPostLogo', {
+          method: 'GET',
+          headers: {
+              'Authorization': `Bearer ${jwtToken}`,
+            },
+            body: JSON.stringify({
+                userId: userId,
+              })
+          });
+          
+          if (!response.ok) {
+              throw new Error('Ошибка при загрузке данных');  // Проверка на успешный запрос
+          }
+
+          const avatarBlob = await response.blob();
+          const avatar = URL.createObjectURL(avatarBlob);
+          setLogo(avatar);  // Устанавливаем загруженные данные
+
+      } catch (error) {
+          setError(error.message);  // Устанавливаем ошибку, если запрос не удался
+      } finally {
+            // Завершаем состояние загрузки
+      }
+
+      try {
+  
+        const response = await fetch('https://localhost:7233/homeApi/HomeApi/GetPersonByUserId', {
+          method: 'GET',
+          headers: {
+              'Authorization': `Bearer ${jwtToken}`,
+            },
+            body: JSON.stringify({
+                userId,
+            })
+          });
+          
+          if (!response.ok) {
+              throw new Error('Ошибка при загрузке данных');  // Проверка на успешный запрос
+          }
+
+          const result = await response.json();  // Преобразование ответа в JSON
+          setPerson(result); // Устанавливаем загруженные данные
+
+      } catch (error) {
+          setError(error.message);  // Устанавливаем ошибку, если запрос не удался
+      } finally {
+            // Завершаем состояние загрузки
+      }
+
+      const ImgId = post.imgId;
+      try {
+  
+        const response = await fetch('https://localhost:7233/homeApi/HomeApi/GetPostFile', {
+          method: 'GET',
+          headers: {
+              'Authorization': `Bearer ${jwtToken}`,
+            },
+            body: JSON.stringify({
+                ImgId,
+            })
+          });
+          
+          if (!response.ok) {
+              throw new Error('Ошибка при загрузке данных');  // Проверка на успешный запрос
+          }
+
+          const avatarBlob = await response.blob();
+          const avatar = URL.createObjectURL(avatarBlob);
+          setFile(avatar);  // Устанавливаем загруженные данные
+
+      } catch (error) {
+          setError(error.message);  // Устанавливаем ошибку, если запрос не удался
+      } finally {
+            // Завершаем состояние загрузки
+      }
+
+      
+  };
+
+    
+  
+  React.useEffect(() => {
+        fetchData();
+  }, []);
 
   return (
     <div className="flex justify-center">
         <Card className="max-w-[700px] min-h-80">
         <CardHeader className="justify-between">
             <div className="flex">
-            <Avatar isBordered radius="full" size="md" className="m-3" src="https://nextui.org/avatars/avatar-1.png" />
+            <Avatar isBordered radius="full" size="md" className="m-3" src={logo} />
             <div className="flex flex-col gap-1 items-start justify-center">
-                <h4 className="text-lg font-semibold leading-none text-default-600">Андрей Пожарский</h4>
-                <h5 className="text-base tracking-tight text-default-400">11.12.2024</h5>
+                <h4 className="text-lg font-semibold leading-none text-default-600">{(person?.name || '') + ' ' + (person?.surname || '')}</h4>
+                <h5 className="text-base tracking-tight text-default-400">{post.Time}</h5>
             </div>
             </div>
         </CardHeader>
@@ -28,11 +127,11 @@ export default function Post({post}: PostProps) {
             <Image
                 width={700}
                 alt="NextUI hero Image"
-                src="https://nextui-docs-v2.vercel.app/images/hero-card-complete.jpeg"
+                src={file}
             />
             <div className="flex flex-col gap-1 items-start justify-center max-w-[500px]">
                 <p className="text-lg">
-                Frontend developer and UI/UX enthusiast. Join me on this coding adventurewa fefwedfsedfawsefewa fweefwafewafdfweaf!
+                {post.Description}
                 </p>
             </div> 
             

@@ -10,7 +10,7 @@ namespace Vsety.DataAccess.Repositories.Interfaces
         Task<PostEntity?> AddLike(PostEntity post, UserEntity user);
         Task<PostEntity> AddPost(Guid userId, Post post);
         Task<PostEntity?> AddRepost(PostEntity post, UserEntity user);
-        Task<List<PostEntity>> GetAllPosts(int count);
+        Task<List<PostEntity>> GetAllPosts(int page, int count);
         Task<PostEntity?> GetById(Guid id);
     }
 }
