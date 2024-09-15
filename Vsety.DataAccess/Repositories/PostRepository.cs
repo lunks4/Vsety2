@@ -137,8 +137,8 @@ namespace Vsety.DataAccess.Repositories
 
         public async Task<List<PostEntity>> GetAllPosts(int page,int count)
         {
-            var posts = await _context.Posts  
-                                    .OrderBy(p => p.Time)
+            var posts = await _context.Posts
+                                    .OrderByDescending(p => p.Time)
                                     .Skip(page)
                                     .Take(count)
                                     .ToListAsync();

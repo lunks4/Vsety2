@@ -1,7 +1,11 @@
+'use client'
 import React from "react";
 import {Card, CardHeader, CardBody, CardFooter, Avatar, Button, Image, } from "@nextui-org/react";
 import Commentary from "./Commentary";
+import "./page.css";
+
 import { PostResponse } from "./page";
+
 
 type PostProps = {
     post: PostResponse
@@ -13,6 +17,9 @@ export default function Post({post}: PostProps) {
   const [file, setFile] = React.useState('');
   const [error, setError] = React.useState(false);
   const [person, setPerson] = React.useState('');
+  const [isLiked, setIsLiked] = React.useState(false);
+
+  const [effectCompleted, setEffectCompleted] = React.useState(false);
 
   function getCookie(name) {
     const value = `; ${document.cookie}`;
@@ -30,10 +37,8 @@ export default function Post({post}: PostProps) {
           method: 'GET',
           headers: {
               'Authorization': `Bearer ${jwtToken}`,
+              'userId': userId,
             },
-            body: JSON.stringify({
-                userId: userId,
-              })
           });
           
           if (!response.ok) {
@@ -56,10 +61,8 @@ export default function Post({post}: PostProps) {
           method: 'GET',
           headers: {
               'Authorization': `Bearer ${jwtToken}`,
-            },
-            body: JSON.stringify({
-                userId,
-            })
+              'userId': userId,
+            }, 
           });
           
           if (!response.ok) {
@@ -82,10 +85,9 @@ export default function Post({post}: PostProps) {
           method: 'GET',
           headers: {
               'Authorization': `Bearer ${jwtToken}`,
+              'imgId': ImgId,
             },
-            body: JSON.stringify({
-                ImgId,
-            })
+            
           });
           
           if (!response.ok) {
@@ -103,43 +105,61 @@ export default function Post({post}: PostProps) {
       }
 
       
+
+      
   };
 
     
   
   React.useEffect(() => {
         fetchData();
+        setEffectCompleted(true);
   }, []);
 
+  
+
+  const date = new Date(post.time);
+
+  const formatter = new Intl.DateTimeFormat('ru-RU', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    
+  });
+  
+  const formattedDate = formatter.format(date);
+
   return (
-    <div className="flex justify-center">
+    <div className="flex justify-center my-3">
         <Card className="max-w-[700px] min-h-80">
         <CardHeader className="justify-between">
             <div className="flex">
             <Avatar isBordered radius="full" size="md" className="m-3" src={logo} />
             <div className="flex flex-col gap-1 items-start justify-center">
                 <h4 className="text-lg font-semibold leading-none text-default-600">{(person?.name || '') + ' ' + (person?.surname || '')}</h4>
-                <h5 className="text-base tracking-tight text-default-400">{post.Time}</h5>
+                <h5 className="text-base tracking-tight text-default-400">{formattedDate}</h5>
             </div>
             </div>
         </CardHeader>
-        <CardBody className="px-3 py-0 text-small text-default-400">
+        <CardBody className="px-3 overflow-hidden">
             <Image
                 width={700}
                 alt="NextUI hero Image"
                 src={file}
             />
-            <div className="flex flex-col gap-1 items-start justify-center max-w-[500px]">
-                <p className="text-lg">
-                {post.Description}
+            <div className="flex flex-col gap-1 items-start justify-center max-w-[500px] mt-3">
+                <p className="text-2xl text-black">
+                {post.description}
                 </p>
             </div> 
             
         </CardBody>
         <CardFooter className="gap-3 m-3">
             <div className="flex gap-1">
-            <Button isIconOnly color="" aria-label="Like" className="rounded-full">
-            <svg xmlns="http://www.w3.org/2000/svg"  color="" width="24" height="24" viewBox="0 0 24 24" fill="red" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+            <Button isIconOnly color="" aria-label="Like" className="rounded-full" onClick={() => setIsLiked(!isLiked)}>
+            <svg xmlns="http://www.w3.org/2000/svg"  color="" width="24" height="24" fill={isLiked?"red":"white"} strokeviewBox="0 0 24 24"  stroke={isLiked?"red":"black"} stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-heart"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
             </Button> 
             </div>
             <div className="flex gap-1">
@@ -153,9 +173,7 @@ export default function Post({post}: PostProps) {
             </Button> 
             </div>
         </CardFooter>
-        <div className="divide-y">
-            <Commentary/>
-        </div>
+            
         </Card>
     </div>
   );

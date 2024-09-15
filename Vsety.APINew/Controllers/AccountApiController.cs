@@ -95,14 +95,7 @@ namespace Vsety.APINew.Controllers
         {
             if (ModelState.IsValid)
             {
-                foreach (var person in _context.Persons)
-                {
-                    _context.Remove(person);
-                }
-                foreach (var person in _context.Imgs)
-                {
-                    _context.Remove(person);
-                }
+                
                 var authHeader = HttpContext.Request.Headers["Authorization"].ToString();
 
                 // Проверяем, что заголовок не пустой и начинается с "Bearer"

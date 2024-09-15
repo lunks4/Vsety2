@@ -91,7 +91,7 @@ namespace Vsety.APINew.Controllers
 
         [Authorize]
         [HttpGet("GetPersonByUserId")]
-        public async Task<IActionResult> GetPersonByUserId(Guid userId)
+        public async Task<IActionResult> GetPersonByUserId([FromHeader] Guid userId)
         {
 
             UserEntity user = await _usersRepository.GetById(userId);
@@ -103,8 +103,10 @@ namespace Vsety.APINew.Controllers
 
         [Authorize]
         [HttpGet("GetAllPosts")]
-        public async Task<IActionResult> GetAllPosts(int page, int count)
+        public async Task<IActionResult> GetAllPosts()
         {
+            int page = int.Parse(HttpContext.Request.Headers["page1"].ToString());
+            int count = int.Parse(HttpContext.Request.Headers["count1"].ToString());
             var posts = await _postRepository.GetAllPosts(page ,count);
 
             return Ok(posts);
@@ -146,7 +148,7 @@ namespace Vsety.APINew.Controllers
 
         [Authorize]
         [HttpGet("GetPostFile")]
-        public async Task<IActionResult> GetPostFile(Guid imgId)
+        public async Task<IActionResult> GetPostFile([FromHeader] Guid imgId)
         {
             ImgEntity img = await _imageRepository.GetById(imgId);
 
@@ -162,7 +164,7 @@ namespace Vsety.APINew.Controllers
 
         [Authorize]
         [HttpGet("GetPostLogo")]
-        public async Task<IActionResult> GetPostLogo(Guid userId)
+        public async Task<IActionResult> GetPostLogo([FromHeader] Guid userId)
         {
             UserEntity user = await _usersRepository.GetById(userId);
             PersonEntity person = await _personsRepository.GetByUserId(userId);
